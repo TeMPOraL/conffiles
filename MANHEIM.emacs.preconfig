@@ -1,0 +1,7 @@
+;;;; Local preconfiguration file.
+
+;;; Add local directory for emacs stuff to load path.
+(defconst local-emacs-stuff "C:/TRC/programy/emacs-stuff/")
+(setq load-path (cons local-emacs-stuff load-path))
+(cd local-emacs-stuff)
+(normal-top-level-add-subdirs-to-load-path)

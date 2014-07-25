@@ -1,0 +1,28 @@
+;; Hey, Emacs! This is a -*- lisp -*- file!
+;; My StumpWM config.
+
+
+(in-package :stumpwm)
+
+(message "stumpwm is loading -- please stand by")
+
+(run-shell-command "xrdb ~/.Xdefaults")
+
+(setf *startup-message* "Hack the planet!")
+
+
+;;; from http://www.xsteve.at/prg/stumpwm/
+;; Turn on the modeline
+(if (not (head-mode-line (current-head)))
+     (toggle-mode-line (current-screen) (current-head)))
+
+;; Show the time in the modeline
+(setf *screen-mode-line-format* (list '(:eval (run-shell-command "date '+%R, %F %a'|tr -d [:cntrl:]" t)) " | [^B%n^b] %W")
+	  *mode-line-background-color* "Black"
+	  *mode-line-foreground-color* "White"
+	  *mode-line-timeout* 1
+	  *window-format* "^B^8*%n%s%m%30t ::^7*")
+
+
+;;;; Keys
+(define-key *top-map* (kbd "s-l") "exec slock")

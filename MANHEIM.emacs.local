@@ -1,0 +1,4 @@
+
+;;; ORG Mode agenda files
+
+(setq org-agenda-files (list "C:/TRC/na tapecie/org/test-todo.org"))
