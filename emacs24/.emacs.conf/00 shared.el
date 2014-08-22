@@ -1,25 +1,29 @@
-;;; Basics of EMACS operations; look & feel.
+;;; Basics of Emacs operations; look & feel.
+;; Appearance
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+
+;; Text look&feel
 (global-font-lock-mode t)
+(setq font-lock-maximum-decoration t)
 (transient-mark-mode t)
-(line-number-mode t)
 (column-number-mode t)
 
-(setq font-lock-maximum-decoration t)
+(show-paren-mode 1)
 
-(tool-bar-mode -1) ;; get rid of that ugly & useless toolbar
+(setq redisplay-dont-pause t)
 
 ;;; Additional line numbering
+(line-number-mode t)
 (global-linum-mode 1)
 (setq linum-format "%d ")
 
 ;;; Use Org Mode as the default mode for new buffers & stuff.
 (setq default-major-mode 'org-mode)
-
-;;; Use tabs for identation where appropiate
-;(setq-default tab-width 4
-;			  indent-tabs-mode t)
-
 (setq-default indent-tabs-mode nil)
+
+;;; Skip startup message
+(setq inhibit-startup-message t)
 
 (require 'cl) ; because we like Common Lisp, and keyword params are nice
 
@@ -36,5 +40,3 @@
      (load ,file)
      ,@configuration))
 
-;;; Skip startup message
-(setq inhibit-startup-message t)
