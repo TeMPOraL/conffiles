@@ -15,28 +15,8 @@ function fish_right_prompt -d "Write out the right prompt"
        echo -n " "
     end
 
-    set temp1 (sensors -u | grep temp3_input | awk '{print $2}')
-    set temp2 (sensors -u | grep temp3_input | awk '{print $2}')
-
-    if test (echo "$temp1 < 70" | bc) -eq 1
-       set_color green
-    else
-       set_color red
-    end
-    printf "%.0f" $temp1
-
     set_color 555
-    echo "/"
 
-    if test (echo "$temp1 < 70" | bc) -eq 1
-       set_color green
-    else
-       set_color red
-    end
-    printf "%.0f" $temp2
-
-    set_color 555
-    echo "℃  "
     date "+%H:%M:%S %d.%m.%Y"
 
     set_color normal
