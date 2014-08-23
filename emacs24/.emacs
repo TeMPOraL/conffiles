@@ -46,8 +46,6 @@
     (autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly ring stamp track)))
  '(erc-pals (quote ("Alice_M")))
  '(foreground-color "#839496")
- '(global-paren-face-mode t)
- '(helm-mode t)
  '(jabber-account-list
    (quote
     (("jacek.zlydach@chat.facebook.com"
