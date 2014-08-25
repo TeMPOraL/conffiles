@@ -47,7 +47,7 @@
  '(erc-pals (quote ("Alice_M")))
  '(foreground-color "#839496")
  '(global-paren-face-mode t)
- '(helm-mode t)
+ '(helm-mode nil)
  '(jabber-account-list
    (quote
     (("jacek.zlydach@chat.facebook.com"
@@ -55,12 +55,15 @@
       (:port . 5222)
       (:connection-type . starttls)))))
  '(jabber-mode-line-mode t)
+ '(php-mode-coding-style (quote pear))
  '(safe-local-variable-values (quote ((Syntax . Common-Lisp))))
  '(tool-bar-mode nil)
  '(weatherline-location "Kraków,Poland")
  '(weatherline-location-id 3094802)
  '(weatherline-mode t)
- '(weatherline-units "metric"))
+ '(weatherline-units "metric")
+ '(weechat-auto-monitor-buffers t)
+ '(weechat-initial-lines 100))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
