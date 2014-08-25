@@ -16,6 +16,7 @@ function fish_right_prompt -d "Write out the right prompt"
     end
 
     set_color 555
+
     date "+%H:%M:%S %d.%m.%Y"
 
     set_color normal

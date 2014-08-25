@@ -35,6 +35,7 @@
  '(background-mode dark)
  '(column-number-mode t)
  '(cursor-color "#839496")
+ '(custom-enabled-themes (quote (tango-dark)))
  '(custom-safe-themes
    (quote
     ("b3f60d671a49dd4adbe1ed9530041e3b7929852e3ac2ebd2def9a46746edfc6f" "ae0233fcacc0356ac73b12a4ed7a352a709e15d70f74e07d7c6d99e979b23184" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
@@ -46,8 +47,6 @@
     (autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly ring stamp track)))
  '(erc-pals (quote ("Alice_M")))
  '(foreground-color "#839496")
- '(global-paren-face-mode t)
- '(helm-mode nil)
  '(jabber-account-list
    (quote
     (("jacek.zlydach@chat.facebook.com"
