@@ -25,6 +25,13 @@
 ;;; Skip startup message
 (setq inhibit-startup-message t)
 
+;;; Smooth scrolling
+(setq scroll-conservatively 10000
+      scroll-step 1)
+
+;;; Fill column
+(setq fill-column 80)
+
 (require 'cl) ; because we like Common Lisp, and keyword params are nice
 
 ;;; Helper macro for other configuration files

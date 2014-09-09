@@ -16,3 +16,6 @@
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+
+;;; Evaling stuff in elisp mode
+(global-set-key (kbd "C-x p") 'eval-print-last-sexp)
