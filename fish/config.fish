@@ -1,3 +1,15 @@
+# some docker stuff
+# TODO maybe move to separate file(s)?
+function dps; sudo docker ps; end
+function di; sudo docker inspect $argv[1]; end
+function da; sudo docker attach $argv[1]; end
+function dip; sudo docker inspect -f "{{ .NetworkSettings.IPAddress }}" $argv[1]; end
+
+function cget; curl -v $argv; end
+function cpost; curl -v -X POST $argv; end
+function cput; curl -v -X PUT $argv; end
+function cdelete; curl -v -X DELETE $argv; end
+
 # some stuff stolen^H^H^H^H^Hborrowed from https://bitbucket.org/sjl/dotfiles/src/tip/fish/config.fish
 function hex; ~/games/OpenHexagon1.92/./OpenHexagon; end
 
