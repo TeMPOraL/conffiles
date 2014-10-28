@@ -5,7 +5,7 @@ function di; sudo docker inspect $argv[1]; end
 function da; sudo docker attach $argv[1]; end
 function dip; sudo docker inspect -f "{{ .NetworkSettings.IPAddress }}" $argv[1]; end
 
-function cget; curl -v $argv; end
+function cget; curl -v -X GET $argv; end
 function cpost; curl -v -X POST $argv; end
 function cput; curl -v -X PUT $argv; end
 function cdelete; curl -v -X DELETE $argv; end
