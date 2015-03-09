@@ -61,7 +61,7 @@
  '(weatherline-location-id 3094802)
  '(weatherline-mode t)
  '(weatherline-units "metric")
- '(weechat-auto-monitor-buffers t)
+ '(weechat-auto-monitor-buffers nil)
  '(weechat-initial-lines 100))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

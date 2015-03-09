@@ -25,6 +25,10 @@
 ;;; Skip startup message
 (setq inhibit-startup-message t)
 
+;;; default browse-url
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
+
 (require 'cl) ; because we like Common Lisp, and keyword params are nice
 
 ;;; Helper macro for other configuration files
