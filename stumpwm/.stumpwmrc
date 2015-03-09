@@ -1,28 +1,44 @@
-;; Hey, Emacs! This is a -*- lisp -*- file!
-;; My StumpWM config.
-
+;;; -*-lisp-*-
+;;; Yay, my fist StumpWM config xD.
 
 (in-package :stumpwm)
 
-(message "stumpwm is loading -- please stand by")
+(setf *screen-mode-line-format*
+      (list "%g|%v^>^B%d^b"))
 
-(run-shell-command "xrdb ~/.Xdefaults")
+(setf *time-modeline-string*
+      "%a %b %e^2 %H:%M:%S^n")
 
-(setf *startup-message* "Hack the planet!")
+(defun cat (&rest strings) "Concatenates strings, like the Unix command 'cat'. A shortcut for (concatenate 'string foo bar)."
+       (apply 'concatenate 'string strings))
 
+;;; modeline
+;(screen-mode-line-mode (current-screen) t)
 
-;;; from http://www.xsteve.at/prg/stumpwm/
-;; Turn on the modeline
-(if (not (head-mode-line (current-head)))
-     (toggle-mode-line (current-screen) (current-head)))
+;;; GROUPS
+(defun group-exists-p (group-name)
+  (find-if (lambda (group)
+             (string= group-name
+                      (group-name group)))
+           (screen-groups (current-screen))))
 
-;; Show the time in the modeline
-(setf *screen-mode-line-format* (list '(:eval (run-shell-command "date '+%R, %F %a'|tr -d [:cntrl:]" t)) " | [^B%n^b] %W")
-	  *mode-line-background-color* "Black"
-	  *mode-line-foreground-color* "White"
-	  *mode-line-timeout* 1
-	  *window-format* "^B^8*%n%s%m%30t ::^7*")
+(defun ensure-group (group-name)
+  (unless (group-exists-p group-name)
+    (stumpwm::run-commands (cat "gnewbg " group-name))))
 
+(setf (group-name (first (screen-groups (current-screen)))) "Terminals")
 
-;;;; Keys
-(define-key *top-map* (kbd "s-l") "exec slock")
+(ensure-group "Emacs")
+(ensure-group "Browser")
+(ensure-group "SQL")
+(ensure-group "IRC")
+
+;; bind g-e to switch to Emacs group.
+;; bind g-b to switch to browser group.
+;; bind g-t to switch to terminal group.
+
+;;; TODO make some direct connection to Alice xD.
+
+(defcommand color-map () ()
+            "Show current color map."
+            (echo-string (current-screen) "^0 0^1 1^2 2^3 3^4 4^5 5^6 6^7 7"))
