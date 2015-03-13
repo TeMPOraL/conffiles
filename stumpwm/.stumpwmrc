@@ -59,6 +59,10 @@
 ;; bind g-b to switch to browser group.
 ;; bind g-t to switch to terminal group.
 
+(defcommand emacs () ()  ;! redefining emacs command
+  "Start Emacs or switch to it, if it is already running."
+  (run-or-raise "emacs" '(:class "Emacs")))
+
 ;;; TODO make some direct connection to Alice xD.
 
 (defcommand color-map () ()
