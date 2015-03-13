@@ -7,7 +7,7 @@
       (list "%g|%v^>^B%d^b"))
 
 (setf *time-modeline-string*
-      "%a %b %e^2 %H:%M:%S^n")
+      "^b%a %b ^B%e^2 %H:%M:%S^n")
 
 (defun cat (&rest strings) "Concatenates strings, like the Unix command 'cat'. A shortcut for (concatenate 'string foo bar)."
        (apply 'concatenate 'string strings))
@@ -26,7 +26,7 @@
   (unless (group-exists-p group-name)
     (stumpwm::run-commands (cat "gnewbg " group-name))))
 
-(setf (group-name (first (screen-groups (current-screen)))) "Terminals")
+(setf (group-name (first (screen-groups (current-screen)))) "Terminals") ;FIXME need to sort by group # first.
 
 (ensure-group "Emacs")
 (ensure-group "Browser")
