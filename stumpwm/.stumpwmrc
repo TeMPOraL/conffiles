@@ -2,9 +2,31 @@
 ;;; Yay, my fist StumpWM config xD.
 
 (in-package :stumpwm)
+(ql:quickload :external-program)
+
+(defun run-external-program (cmd args)
+  (with-open-stream (s (make-string-output-stream))
+    (external-program:run cmd args :output s)
+    (string-trim '(#\Newline #\Space) (get-output-stream-string s))))
+
+(defun current-hostname ()
+  (run-external-program "hostname" '()))
+
+(defun current-ips ()
+  (run-external-program "hostname" '("-I")))
+
+;;; mode line
+(setf *mode-line-timeout* 1)
 
 (setf *screen-mode-line-format*
-      (list "%g|%v^>^B%d^b"))
+      (list "%g|%v"
+            "^>"
+            " ^1"
+            (current-hostname)
+            "^n | "
+            (current-ips)
+            " | "
+            "^B%d^b"))
 
 (setf *time-modeline-string*
       "^b%a %b ^B%e^2 %H:%M:%S^n")
@@ -42,3 +64,14 @@
 (defcommand color-map () ()
             "Show current color map."
             (echo-string (current-screen) "^0 0^1 1^2 2^3 3^4 4^5 5^6 6^7 7"))
+
+;;; Hooks
+(defun ensure-hook (hook fn)
+  (remove-hook hook fn)
+  (add-hook hook fn))
+
+(defun my-modeline-click-hook (screen button x y)
+  (message "Clicked: X:~A, Y:~A" x y))
+
+;; FIXME
+;; (ensure-hook *mode-line-click-hook* 'my-modeline-click-hook)
