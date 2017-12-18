@@ -16,6 +16,8 @@
          ("C-c C-<" . mc/mark-all-like-this)
          ;; TODO there are more useful functions - like mark-next/previous/all-symbol and mark--in-defun
          ))
+;;; TODO consider adding phi-search, phi-replace, phi-search-mc (?) - https://github.com/zk-phi/phi-search
+;;; TODO consider adding mc-extras https://github.com/knu/mc-extras.el
 
 (use-package expand-region
   :ensure t
@@ -73,5 +75,7 @@
   (add-hook 'focus-in-hook #'nlinum-hl-flush-all-windows)
   (add-hook 'focus-out-hook #'nlinum-hl-flush-all-windows))
 
+(use-package htmlize
+  :ensure t)
 
 (provide 'init-generic-modes)

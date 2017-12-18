@@ -5,3 +5,4 @@ emacs25/.emacs.d/elpa/*
 /emacs25/.emacs.d/network-security.data
 /emacs25/.emacs.d/auto-save-list/*
 /emacs25/.emacs.d/eshell/*
+/emacs25/.emacs.d/bookmarks

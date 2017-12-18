@@ -27,6 +27,12 @@
 
 ;; TODO auto-save-files config?
 
+
+;;; Personalization
+(setq user-full-name "Jacek \"TeMPOraL\" Złydach"
+      user-mail-address "temporal.pl@gmail.com")
+
+
 ;;; Emacs performance
 (setq gc-cons-threshold 5000000)
 
