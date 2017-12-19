@@ -1,3 +1,8 @@
-/fish/fish_history
-/fish/fishd.0800270467d7
-/fish/generated_completions/
+emacs25/.emacs.d/backups/*
+/emacs25/.emacs.d/custom.el
+emacs25/.emacs.d/elpa/*
+/emacs25/.emacs.d/ido.last
+/emacs25/.emacs.d/network-security.data
+/emacs25/.emacs.d/auto-save-list/*
+/emacs25/.emacs.d/eshell/*
+/emacs25/.emacs.d/bookmarks
