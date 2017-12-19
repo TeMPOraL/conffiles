@@ -29,7 +29,7 @@
 
         org-agenda-span 14
         org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
-                                  (sequence "WAITING_FOR(w@/!)" "DELEGATED(e@/!)" "|" "CANCELLED(c@/!")))
+                                  (sequence "WAITING_FOR(w@/!)" "DELEGATED(e@/!)" "|" "CANCELLED(c@/!)")))
         ;; TODO faces for org keywords (maybe in look&feel file, or sth?)
 
         org-use-fast-todo-selection t
@@ -41,29 +41,70 @@
 
         org-agenda-custom-commands '(("o" "General task overview" todo ""
                                       ((org-super-agenda-groups
-                                        '((:auto-category t))))
+                                        '((:name "Most Important Tasks"
+                                                 :tag "MIT")
+                                          (:name "Due today"
+                                                 :deadline today)
+                                          (:name "For today"
+                                                 :scheduled today)
+                                          (:name "Past their date"
+                                                 :deadline past
+                                                 :scheduled past)
+                                          (:name "Others"
+                                                 :auto-category t))))
                                       ("~/Dropbox/GTD2/out/overview.html"
                                        "~/Dropbox/GTD2/out/overview.txt"))
-                                     ("x" "For today" agenda ""
+                                     ("n" "Next up (if you don't know what to do)" todo ""
                                       ((org-super-agenda-groups
                                         '((:name "Most Important Tasks"
                                                  :tag "MIT")
-                                          (:name "Day plan"
-                                                 :time-grid t)
+                                          (:name "Next actions (important)"
+                                                 :and (:todo "NEXT"
+                                                             :priority>= "C"))
+                                          (:name "Next actions"
+                                                 :todo "NEXT")
+                                          (:discard (:anything))))))
+                                     ("." "For today" agenda ""
+                                      ((org-super-agenda-groups
+                                        '((:name "Most Important Tasks"
+                                                 :tag "MIT")
                                           (:name "Habits"
                                                  :habit t)
+                                          (:name "Day plan"
+                                                 :time-grid t)
                                           (:name "Important"
-                                                 :priority "A")))
+                                                 :priority "A"
+                                                 :deadline today)
+                                          (:name "At the office"
+                                                 :tag "@work")
+                                          (:name "At home"
+                                                 :tag "@home"
+                                                 :tag "@home-krk"
+                                                 :tag "@home-rab")
+                                          (:name "At hackerspace"
+                                                 :tag "@hskrk")
+                                          (:name "Due past"
+                                                 :deadline past)
+                                          (:name "Scheduled past"
+                                                 :scheduled past)))
                                        (org-agenda-span 1))
                                       ("~/Dropbox/GTD2/out/today.html"
                                        "~/Dropbox/GTD2/out/today.txt"))
-                                     ("g" "General calendar" agenda ""
+                                     ("c" "Weekly calendar" agenda ""
                                       ((org-super-agenda-groups
-                                        '((:name
-                                           ;; TODO continue
-                                           ))))
-                                      ("~/Dropbox/GTD2/out/general-calendar.html"
-                                       "~/Dropbox/GTD2/out/general-calendar.txt")))
+                                        '((:name "Calendar"
+                                                 :time-grid t)
+                                          (:discard (:anything))))
+                                       (org-agenda-span 7)))
+                                     ("w" "Weekly calendar and tasks" agenda ""
+                                      ((org-super-agenda-groups
+                                        '((:name "Calendar"
+                                                 :time-grid t)
+                                          (:name "Important"
+                                                 :priority "A")))
+                                       (org-agenda-span 7))
+                                      ("~/Dropbox/GTD2/out/weekly-calendar-plus-tasks.html"
+                                       "~/Dropbox/GTD2/out/weekly-calendar-plus-tasks.txt")))
 
         ;; TODO templates - capture
         org-capture-templates '(("t" "TODO" entry
