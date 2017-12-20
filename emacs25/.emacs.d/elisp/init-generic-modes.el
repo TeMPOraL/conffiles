@@ -53,6 +53,7 @@
   :config
   (ido-ubiquitous-mode 1))
 
+
 ;;; Utility modes
 (use-package whitespace
   :bind ("<f12>" . whitespace-mode)
@@ -77,5 +78,14 @@
 
 (use-package htmlize
   :ensure t)
+
+(use-package undo-tree
+  :ensure t
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
 
 (provide 'init-generic-modes)

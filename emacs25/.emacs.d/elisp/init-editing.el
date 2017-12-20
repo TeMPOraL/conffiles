@@ -18,4 +18,6 @@
 ;; (unless (eq system-type 'windows-nt)
 ;;  (set-selection-coding-system 'utf-8))
 
+(setq sentence-end-double-space nil)
+
 (provide 'init-editing)

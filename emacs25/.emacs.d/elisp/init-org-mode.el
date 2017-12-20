@@ -106,6 +106,26 @@
                                       ("~/Dropbox/GTD2/out/weekly-calendar-plus-tasks.html"
                                        "~/Dropbox/GTD2/out/weekly-calendar-plus-tasks.txt")))
 
+        ;; TODO
+        ;; - (setq org-tags-exclude-from-inheritance '("project"))
+        ;;   + set up an agenda entry for listing all projects
+        ;;
+        ;; - Add a "TODOs in current file" entry as T (apparently you can override default keys
+        ;;   with custom agenda commands).
+        ;; - Add a "Questions" entry that is pointed to a file in which I store questions
+        ;;   (apparently it's enough to override org-agenda-files).
+        ;; - Add a "Shopping" entry that is pointed to a file in which I store shopping tasks.
+
+        ;; TODO maybe steal from Sachachua:
+        ;; - my/org-agenda-new
+        ;; - my/org-agenda-mark-done-and-add-followup
+
+        ;; TODO build something similar to Sachachua's my/org-show-active-projects
+        ;; (also, holy shit my/org-prepare-weekly-review)
+
+        ;; TODO maybe also steal Sacha's jump-to-org-agenda to use on an idle timer,
+        ;; but it needs to work with a custom command!
+
         ;; TODO templates - capture
         org-capture-templates '(("t" "TODO" entry
                                  (file+headline "~/Dropbox/GTD2/inbox.org" "Inbox")
@@ -137,11 +157,19 @@
          ("C-c r" . org-remember)
          ("C-c c" . org-capture)
          ("<f9>" . org-agenda)
-         ("<f7>" . org-time-stamp-inactive))
+         ("<f7>" . org-time-stamp-inactive)
+         ("C-c j" . org-clock-goto))
 
   :config
   (add-to-list 'org-modules 'org-habit)
-  (org-load-modules-maybe t))
+  (org-load-modules-maybe t)
+  
+  (setq org-habit-graph-column 80)
+
+  ;; Some extra keybindings
+  (bind-key "i" 'org-agenda-clock-in org-agenda-mode-map)
+  (bind-key "o" 'org-agenda-clock-out org-agenda-mode-map)
+  )
 
 ;;; XXX not sure if this is the best way; maybe set up in org mode through org-modules instead?
 

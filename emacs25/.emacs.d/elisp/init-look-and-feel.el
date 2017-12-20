@@ -39,6 +39,11 @@
   :config
   (window-numbering-mode))
 
+
+;;; XXX is winner mode not available anymore?
+;; (use-package winner
+;;   :ensure t)
+
 ;; Still not sure whether I want Nyan Mode or not.
 ;; (use-package nyan-mode
 ;;   :ensure t
