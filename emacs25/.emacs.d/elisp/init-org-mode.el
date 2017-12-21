@@ -75,6 +75,8 @@
                                           (:name "Important"
                                                  :priority "A"
                                                  :deadline today)
+                                          (:name "For today"
+                                                 :scheduled today)
                                           (:name "At the office"
                                                  :tag "@work")
                                           (:name "At home"
