@@ -9,13 +9,15 @@
         org-pretty-entities t
         org-pretty-entities-include-sub-superscripts nil
         org-special-ctrl-a/e t
+        org-catch-invisible-edits 'error
 
         org-log-done t
 
         ;; FIXME these need to be rewritten for OS-independent path (e.g. w/ trc/user-real-homedir function, or sth.).
-        org-agenda-files '("~/Dropbox/GTD2/"
-                           "~/Dropbox/GTD2/projects/"
-                           "~/Dropbox/GTD2/projects/HSKRK/")
+        ;; NOTE handled by #'my/switch-agenda-working-context in the :config section.
+        ;; org-agenda-files '("~/Dropbox/GTD2/"
+        ;;                    "~/Dropbox/GTD2/projects/"
+        ;;                    "~/Dropbox/GTD2/projects/HSKRK/")
 
         org-refile-targets '((nil :maxlevel . 1)
                              (org-agenda-files :maxlevel . 1))
@@ -28,6 +30,7 @@
                                    (search . " %i %-12:c"))
 
         org-agenda-span 14
+        org-deadline-warning-days 14
         org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
                                   (sequence "WAITING_FOR(w@/!)" "DELEGATED(e@/!)" "|" "CANCELLED(c@/!)")))
         ;; TODO faces for org keywords (maybe in look&feel file, or sth?)
@@ -158,6 +161,7 @@
   :bind (("C-c a" . org-agenda)
          ("C-c r" . org-remember)
          ("C-c c" . org-capture)
+         ("C-c l" . org-store-link)
          ("<f9>" . org-agenda)
          ("<f7>" . org-time-stamp-inactive)
          ("C-c j" . org-clock-goto))
@@ -167,6 +171,28 @@
   (org-load-modules-maybe t)
   
   (setq org-habit-graph-column 80)
+
+  (setq my/agenda-working-contexts-alist '((personal . ("~/Dropbox/GTD2/"
+                                                        "~/Dropbox/GTD2/projects/"
+                                                        "~/Dropbox/GTD2/projects/HSKRK/"))
+                                           (work . ("~/Dropbox/Fideltronik/"))))
+  
+  (defun my/switch-agenda-working-context (context)
+    (message "Switching agenda focus to %s." context)
+    (setq org-agenda-files (cdr (assoc context my/agenda-working-contexts-alist))))
+
+  ;; FIXME Should not be separate functions, but I cannot into Emacs Lisp.
+  (defun my/agenda-personal-mode ()
+    (interactive)
+    (my/switch-agenda-working-context 'personal))
+  (defun my/agenda-work-mode ()
+    (interactive)
+    (my/switch-agenda-working-context 'work))
+
+  (my/switch-agenda-working-context 'personal)             ;default
+
+  (bind-key "<f6> p" 'my/agenda-personal-mode)
+  (bind-key "<f6> w" 'my/agenda-work-mode)
 
   ;; Some extra keybindings
   (bind-key "i" 'org-agenda-clock-in org-agenda-mode-map)
