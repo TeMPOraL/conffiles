@@ -63,10 +63,15 @@
 
 ;;; Programming
 (require 'init-programming)
+(require 'init-markup-modes)
+(require 'init-webdev)
 (require 'init-lisp)
 
 ;;; Org mode
 (require 'init-org-mode)
+
+;;; Random stuff
+(require 'init-games)
 
 
 ;;; Finally, start up Emacs Daemon.

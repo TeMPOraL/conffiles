@@ -36,7 +36,7 @@
   :ensure t
   :diminish
   :init
-  (setq inferior-lisp-program "sbcl")
+  (setq inferior-lisp-program "sbcl --dynamic-space-size 4096")
   :config
   (slime-setup '(slime-fancy)))
 
