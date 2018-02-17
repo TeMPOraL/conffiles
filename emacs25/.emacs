@@ -62,6 +62,7 @@
 (require 'init-generic-modes)
 
 ;;; Programming
+(require 'init-shell)
 (require 'init-programming)
 (require 'init-markup-modes)
 (require 'init-webdev)
