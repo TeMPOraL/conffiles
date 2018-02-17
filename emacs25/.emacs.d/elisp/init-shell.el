@@ -10,7 +10,10 @@
            " "
            (with-face (abbreviate-file-name (eshell/pwd)) :foreground "white")
            (if (= (user-uid) 0)
-               (with-face " # " :foreground "red")
-             (with-face " $ " :foreground "green"))))))
+               (with-face " #" :foreground "red")
+             (with-face " $" :foreground "green"))
+           (with-face " " :foreground "white")))))
 
 (setq eshell-highlight-prompt nil) ; we'll handle colors ourselves
+
+(provide 'init-shell)
