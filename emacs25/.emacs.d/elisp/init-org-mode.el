@@ -158,6 +158,9 @@
                                  "* %c\n   %T\n   %?")))
   (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
 
+  (setq org-clock-persist t)
+  (org-clock-persistence-insinuate)
+
   :bind (("C-c a" . org-agenda)
          ("C-c r" . org-remember)
          ("C-c c" . org-capture)
@@ -175,7 +178,7 @@
   (setq my/agenda-working-contexts-alist '((personal . ("~/Dropbox/GTD2/"
                                                         "~/Dropbox/GTD2/projects/"
                                                         "~/Dropbox/GTD2/projects/HSKRK/"))
-                                           (work . ("~/Dropbox/Fideltronik/"))))
+                                           (work . ("~/Dropbox/endsec/"))))
   
   (defun my/switch-agenda-working-context (context)
     (message "Switching agenda focus to %s." context)

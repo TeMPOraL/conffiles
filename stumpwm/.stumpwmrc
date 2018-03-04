@@ -15,12 +15,17 @@
 (defun current-ips ()
   (run-external-program "hostname" '("-I")))
 
+(defun current-dropbox ()
+  ;; TODO colors
+  (run-external-program "dropbox" '("status")))
+
 ;;; mode line
 (setf *mode-line-timeout* 1)
 
 (setf *screen-mode-line-format*
       (list "%g|%v"
             "^>"
+            '(:eval (current-dropbox))
             " ^1"
             (current-hostname)
             "^n | "
@@ -35,7 +40,9 @@
        (apply 'concatenate 'string strings))
 
 ;;; modeline
-;(screen-mode-line-mode (current-screen) t)
+;; Turn on the modeline
+(if (not (head-mode-line (current-head)))
+    (toggle-mode-line (current-screen) (current-head)))
 
 ;;; GROUPS
 (defun group-exists-p (group-name)
@@ -79,3 +86,30 @@
 
 ;; FIXME
 ;; (ensure-hook *mode-line-click-hook* 'my-modeline-click-hook)
+
+;;; Fix up the keyboard
+(run-external-program "setxkbmap" '("-layout" "pl" "-option" "ctrl:nocaps")) ;XXX y u no work?
+;;; TODO start dropbox -- dropbox start
+;;; TODO start pulseaudio -- if(pulseaudio --check == 0) { pulseaudio -D }
+
+;;; TODO steal some stuff from https://github.com/joelagnel/stumpwm-goodies
+
+;;; TODO volume display
+;;; pactl list sinks | grep -e "^[[:space:]]Volume" | awk '{print $5 ; print $12}'
+
+
+;;; Volume control
+;;; TODO better volume control
+;;; Will work like this:
+;;; - var for volume level, mutedp
+;;; - each operation (+/-/mute) also updates the volume level (and mute status, if we'll use pulseaudio to handle that state) and refreshes modeline
+;;; - cached volume level is displayed in modeline
+;;; - if there isn't a convenient mute in pulseaudio, implement it internally - via flipping mutedp and setting volume to 0 or setting it to cached value, depending on mutedp value
+;;; - extension: handle C-[volume] as 1%
+;;; - extension: implement limit at 100%, use S-[volume] and C-S-[volume] to go over 100%
+;;;   - this will most likely require to set volume to absolute value (based on what's stored), instead of using relative
+;;;   - should not be a problem if we fetch the real _before_ executing the increase/decrease
+
+(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioLowerVolume") "exec pactl set-sink-volume 0 -5%")
+(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioRaiseVolume") "exec pactl set-sink-volume 0 +5%")
+(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioMute") "exec pactl set-sink-volume 0 0%")

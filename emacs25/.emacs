@@ -67,6 +67,7 @@
 (require 'init-markup-modes)
 (require 'init-webdev)
 (require 'init-lisp)
+(require 'init-rust)
 
 ;;; Org mode
 (require 'init-org-mode)
