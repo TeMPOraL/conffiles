@@ -19,6 +19,17 @@
         ;;                    "~/Dropbox/GTD2/projects/"
         ;;                    "~/Dropbox/GTD2/projects/HSKRK/")
 
+        ;; Let's use work week for durations
+        ;; org-duration-units `(("min" . 1)
+        ;;                      ("h" . 60)
+        ;;                      ("d" . ,(* 60 8))
+        ;;                      ("w" . ,(* 60 8 5))
+        ;;                      ("m" . ,(* 60 8 5 4))
+        ;;                      ("y" . ,(* 60 8 5 4 10)))
+
+        ;; Also, just show clock time just in hours and minutes
+        org-duration-format 'h:mm
+
         org-refile-targets '((nil :maxlevel . 1)
                              (org-agenda-files :maxlevel . 1))
 
