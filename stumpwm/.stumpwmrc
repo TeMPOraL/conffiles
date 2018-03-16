@@ -1,13 +1,30 @@
 ;;; -*-lisp-*-
-;;; Yay, my fist StumpWM config xD.
+;;; Yay, my ever improving StumpWM config xD.
 
 (in-package :stumpwm)
 (ql:quickload :external-program)
+
+;;; SWANK
+(ql:quickload :swank)
+(swank-loader:init)
+(swank:create-server :port 4123
+                     :style swank:*communication-style*
+                     :dont-close t)
 
+
+;;; Utilities
+
+(defun cat (&rest strings) "Concatenates strings, like the Unix command 'cat'. A shortcut for (concatenate 'string foo bar)."
+       (apply 'concatenate 'string strings))
+
+;;; FIXME Probably not needed - stumpwm has a builtin for that.
 (defun run-external-program (cmd args)
   (with-open-stream (s (make-string-output-stream))
     (external-program:run cmd args :output s)
     (string-trim '(#\Newline #\Space) (get-output-stream-string s))))
+
+
+;;; Mode line configuration
 
 (defun current-hostname ()
   (run-external-program "hostname" '()))
@@ -26,7 +43,7 @@
       (list "%g|%v"
             "^>"
             '(:eval (current-dropbox))
-            " ^1"
+            " ^2"
             (current-hostname)
             "^n | "
             (current-ips)
@@ -34,17 +51,15 @@
             "^B%d^b"))
 
 (setf *time-modeline-string*
-      "^b%a %b ^B%e^2 %H:%M:%S^n")
+      "^b%a %b ^B%e^3 %H:%M:%S^n")
 
-(defun cat (&rest strings) "Concatenates strings, like the Unix command 'cat'. A shortcut for (concatenate 'string foo bar)."
-       (apply 'concatenate 'string strings))
-
-;;; modeline
 ;; Turn on the modeline
 (if (not (head-mode-line (current-head)))
     (toggle-mode-line (current-screen) (current-head)))
 
-;;; GROUPS
+
+;;; Window groups
+
 (defun group-exists-p (group-name)
   (find-if (lambda (group)
              (string= group-name
@@ -77,39 +92,97 @@
             (echo-string (current-screen) "^0 0^1 1^2 2^3 3^4 4^5 5^6 6^7 7"))
 
 ;;; Hooks
-(defun ensure-hook (hook fn)
-  (remove-hook hook fn)
-  (add-hook hook fn))
-
 (defun my-modeline-click-hook (screen button x y)
   (message "Clicked: X:~A, Y:~A" x y))
 
-;; FIXME
-;; (ensure-hook *mode-line-click-hook* 'my-modeline-click-hook)
+(add-hook *mode-line-click-hook* 'my-modeline-click-hook)
 
 ;;; Fix up the keyboard
 (run-external-program "setxkbmap" '("-layout" "pl" "-option" "ctrl:nocaps")) ;XXX y u no work?
+
 ;;; TODO start dropbox -- dropbox start
 ;;; TODO start pulseaudio -- if(pulseaudio --check == 0) { pulseaudio -D }
 
 ;;; TODO steal some stuff from https://github.com/joelagnel/stumpwm-goodies
 
-;;; TODO volume display
-;;; pactl list sinks | grep -e "^[[:space:]]Volume" | awk '{print $5 ; print $12}'
-
 
 ;;; Volume control
-;;; TODO better volume control
-;;; Will work like this:
-;;; - var for volume level, mutedp
-;;; - each operation (+/-/mute) also updates the volume level (and mute status, if we'll use pulseaudio to handle that state) and refreshes modeline
-;;; - cached volume level is displayed in modeline
-;;; - if there isn't a convenient mute in pulseaudio, implement it internally - via flipping mutedp and setting volume to 0 or setting it to cached value, depending on mutedp value
-;;; - extension: handle C-[volume] as 1%
-;;; - extension: implement limit at 100%, use S-[volume] and C-S-[volume] to go over 100%
-;;;   - this will most likely require to set volume to absolute value (based on what's stored), instead of using relative
-;;;   - should not be a problem if we fetch the real _before_ executing the increase/decrease
 
-(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioLowerVolume") "exec pactl set-sink-volume 0 -5%")
-(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioRaiseVolume") "exec pactl set-sink-volume 0 +5%")
-(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioMute") "exec pactl set-sink-volume 0 0%")
+(defun current-volume-settings ()
+  "Return current volume settings as multiple values (`MUTEDP', `VOLUME-LEFT-%', `VOLUME-RIGHT-%')."
+  (let* ((raw-output (run-shell-command "pactl list sinks" t))
+         (raw-mute (nth-value 1 (cl-ppcre:scan-to-strings "Mute: ([a-z]+)" raw-output)))
+         (raw-volume (nth-value 1 (cl-ppcre:scan-to-strings "Volume: .+/\\s+(\\d+).+/.+/\\s+(\\d+).+/" raw-output)))
+         (mutedp (string= (svref raw-mute 0) "yes"))
+         (vol%-l (parse-integer (svref raw-volume 0)))
+         (vol%-r (parse-integer (svref raw-volume 1))))
+    (values mutedp vol%-l vol%-r)))
+
+(defun display-current-volume ()
+  "Graphically display the current volume state."
+  (multiple-value-bind (mutedp left% right%)
+      (current-volume-settings)
+    (let ((*record-last-msg-override* t))
+      (message "Volume: ~:[~;^1MUTE^n~] [~D%/~D%]" mutedp left% right%))))
+
+(defcommand vol+ (dvol force) ((:number "Delta % (can be negative): ") (:y-or-n "Override volume limits? "))
+  "Change the volume by `DV' percent, possibly going over 100% if `FORCE' is T."
+  (multiple-value-bind (mutedp left% right%)
+      (current-volume-settings)
+    (declare (ignore mutedp))
+    (let* ((current (max left% right%))
+           (target (+ current dvol))
+           (final (if force
+                      (max 0 target)
+                      (clamp target 0 100))))
+      (run-shell-command (format nil "pactl set-sink-volume 0 ~D%" final))))
+  (display-current-volume))
+
+(defcommand vol-mute () ()
+  "Toggle mute of volume."
+  (run-shell-command "pactl set-sink-mute 0 toggle" t)
+  (display-current-volume))
+
+;;; Within bounds
+(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioLowerVolume") "vol+ -5 n")
+(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioRaiseVolume") "vol+ 5 n")
+(define-key stumpwm:*top-map* (stumpwm:kbd "C-XF86AudioLowerVolume") "vol+ -1 n")
+(define-key stumpwm:*top-map* (stumpwm:kbd "C-XF86AudioRaiseVolume") "vol+ 1 n")
+(define-key stumpwm:*top-map* (stumpwm:kbd "S-XF86AudioLowerVolume") "vol+ -25 n")
+(define-key stumpwm:*top-map* (stumpwm:kbd "S-XF86AudioRaiseVolume") "vol+ 25 n")
+
+;;; Outside bounds
+(define-key stumpwm:*top-map* (stumpwm:kbd "M-XF86AudioLowerVolume") "vol+ -5 y")
+(define-key stumpwm:*top-map* (stumpwm:kbd "M-XF86AudioRaiseVolume") "vol+ 5 y")
+(define-key stumpwm:*top-map* (stumpwm:kbd "M-C-XF86AudioLowerVolume") "vol+ -1 y")
+(define-key stumpwm:*top-map* (stumpwm:kbd "M-C-XF86AudioRaiseVolume") "vol+ 1 y")
+(define-key stumpwm:*top-map* (stumpwm:kbd "M-S-XF86AudioLowerVolume") "vol+ -25 y")
+(define-key stumpwm:*top-map* (stumpwm:kbd "M-S-XF86AudioRaiseVolume") "vol+ 25 y")
+
+;;; Muting
+(define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioMute") "vol-mute")
+
+
+
+;; (setf *colors* (list "#3c4c55"      ; 0 black
+;;                      "#d18ec2"      ; 1 red
+;;                      "#ff6a6a"      ; 2 green
+;;                      "#dada93"      ; 3 yellow
+;;                      "#83afe5"      ; 4 blue
+;;                      "#7fc1ca"      ; 6 cyan
+;;                      "#9a93e1"      ; 5 magenta
+;;                      "#899ba6")) ; 7 white
+
+;; LCARS
+;; (setf *colors* (list "#3c4c55"      ; 0 black
+;;                      "#ff0000"      ; 1 red
+;;                      "#a27fa5"      ; 2 green
+;;                      "#ffff33"      ; 3 yellow
+;;                      "#99ccff"      ; 4 blue
+;;                      "#ccccff"      ; 6 cyan
+;;                      "#adacd8"      ; 5 magenta
+;;                      "#ffffff")) ; 7 white
+;; (update-color-map (current-screen))
+
+;; ORIGINAL:
+;; ("black" "red" "green" "yellow" "blue" "magenta" "cyan" "white")
