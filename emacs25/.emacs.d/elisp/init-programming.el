@@ -10,6 +10,9 @@
 (add-hook 'prog-mode-hook             ;XXX what is prog-common-hook anyway?
           #'trc/insert-magic-keywords-hl)
 
+(add-hook 'prog-mode-hook
+          'prettify-symbols-mode)
+
 (use-package pretty-lambdada
   :ensure t
   :disabled t ; we'll try with prettify-symbols-mode

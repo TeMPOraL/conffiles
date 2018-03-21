@@ -4,9 +4,7 @@
 (use-package lisp-mode
   :init
   (defconst lisp--prettify-symbols-alist '(("lambda"  . ?λ)
-                                           ("."       . ?•)))
-  :config
-  (global-prettify-symbols-mode t))
+                                           ("."       . ?•))))
 
 (use-package paren-face
   :ensure t
@@ -34,10 +32,13 @@
 ;;; Common Lisp
 (use-package slime
   :ensure t
-  :diminish
+  ;; :diminish
   :init
   (setq inferior-lisp-program "sbcl --dynamic-space-size 4096")
   :config
-  (slime-setup '(slime-fancy)))
+  (slime-setup '(slime-fancy))
+  (setq log4slime-mode nil) ;; hack, log4slime references to free variable
+  (load "~/quicklisp/log4slime-setup.el")
+  (global-log4slime-mode 1))
 
 (provide 'init-lisp)
