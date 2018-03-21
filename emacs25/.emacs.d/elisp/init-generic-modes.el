@@ -1,4 +1,7 @@
 ;;; Editing experience improving modes
+(use-package diminish
+  :ensure t)
+
 (use-package which-key
   :ensure t
   :defer 10
