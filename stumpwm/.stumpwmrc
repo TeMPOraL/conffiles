@@ -2,7 +2,10 @@
 ;;; Yay, my ever improving StumpWM config xD.
 
 (in-package :stumpwm)
+
 (ql:quickload :external-program)
+(ql:quickload :cl-fsnotify) ;for filesystem notifications
+
 
 ;;; SWANK
 (ql:quickload :swank)
@@ -25,6 +28,7 @@
 
 
 ;;; Mode line configuration
+(defparameter *org-clock-current-task* "[N/A]")
 
 (defun current-hostname ()
   (run-external-program "hostname" '()))
@@ -40,7 +44,8 @@
 (setf *mode-line-timeout* 1)
 
 (setf *screen-mode-line-format*
-      (list "%g|%v"
+      (list "%g|%v | ^1"
+            '(:eval *org-clock-current-task*)
             "^>"
             '(:eval (current-dropbox))
             " ^2"
@@ -56,6 +61,30 @@
 ;; Turn on the modeline
 (if (not (head-mode-line (current-head)))
     (toggle-mode-line (current-screen) (current-head)))
+
+
+;;; Org clock fetching
+;;; TODO turn into fsnotify hooks
+(defparameter +org-clock-file-name+ "/home/temporal/.org.clock")
+(defparameter +org-clock-monitoring-interval-seconds+ 5)
+(defvar *fs-monitoring-timer* nil)
+
+(unless *fs-monitoring-timer*
+  (unless cl-fsnotify::*inotify* ; HACK to ensure we don't reopen fsnotify when re-evaluating the config
+    (cl-fsnotify:open-fsnotify))
+  (cl-fsnotify:add-watch +org-clock-file-name+)
+  (setf *fs-monitoring-timer* (run-with-timer +org-clock-monitoring-interval-seconds+
+                                              +org-clock-monitoring-interval-seconds+
+                                              (lambda ()
+                                                (when (some (lambda (event)
+                                                              (and (consp event)
+                                                                   (stringp (car event))
+                                                                   (string= (car event) +org-clock-file-name+)))
+                                                            (cl-fsnotify:get-events))
+                                                  (setf *org-clock-current-task* (fetch-current-org-clock)))))))
+
+(defun fetch-current-org-clock ()
+  (read-file-into-string +org-clock-file-name+))
 
 
 ;;; Window groups
