@@ -163,6 +163,15 @@
 (define-key stumpwm:*top-map* (stumpwm:kbd "XF86AudioMute") "vol-mute")
 
 
+;;; Wallpaper
+(run-shell-command "display -window root /home/temporal/Pictures/ufp.jpg")
+
+
+;;; Starting services.
+(run-shell-command "dropbox start")     ; Dropbox
+(run-shell-command "pulseaudio -D")     ; PulseAudio
+
+
 
 ;; (setf *colors* (list "#3c4c55"      ; 0 black
 ;;                      "#d18ec2"      ; 1 red
