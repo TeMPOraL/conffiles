@@ -84,7 +84,7 @@
                                                   (setf *org-clock-current-task* (fetch-current-org-clock)))))))
 
 (defun fetch-current-org-clock ()
-  (read-file-into-string +org-clock-file-name+))
+  (ignore-errors (read-file-into-string +org-clock-file-name+)))
 
 
 ;;; Window groups
