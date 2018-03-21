@@ -91,4 +91,8 @@
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
 
+
+;;; Additional utility configurations
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
 (provide 'init-generic-modes)
