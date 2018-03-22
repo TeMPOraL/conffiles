@@ -3,6 +3,16 @@
 
 (in-package :stumpwm)
 
+
+;;; Finding local SBCL source - I forgot to set that up when first compiling StumpWM binary.
+(setf (logical-pathname-translations "SYS")
+      '(("SYS:SRC;**;*.*.*"
+         #P"/home/temporal/repos/sbcl/src/**/*.*")
+        ("SYS:CONTRIB;**;*.*.*"
+         #P"/home/temporal/repos/sbcl/contrib/**/*.*")))
+
+
+
 (ql:quickload :external-program)
 (ql:quickload :cl-fsnotify) ;for filesystem notifications
 
