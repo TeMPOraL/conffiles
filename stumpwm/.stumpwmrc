@@ -69,8 +69,12 @@
 (defparameter +org-clock-monitoring-interval-seconds+ 5)
 (defvar *fs-monitoring-timer* nil)
 
+(defun fetch-current-org-clock ()
+  (ignore-errors (read-file-into-string +org-clock-file-name+)))
+
 (unless *fs-monitoring-timer*
-  (unless cl-fsnotify::*inotify* ; HACK to ensure we don't reopen fsnotify when re-evaluating the config
+  (unless (and (boundp 'cl-fsnotify::*inotify*)
+               cl-fsnotify::*inotify*) ; HACK to ensure we don't reopen fsnotify when re-evaluating the config
     (cl-fsnotify:open-fsnotify))
   (cl-fsnotify:add-watch +org-clock-file-name+)
   (setf *fs-monitoring-timer* (run-with-timer +org-clock-monitoring-interval-seconds+
@@ -82,9 +86,6 @@
                                                                    (string= (car event) +org-clock-file-name+)))
                                                             (cl-fsnotify:get-events))
                                                   (setf *org-clock-current-task* (fetch-current-org-clock)))))))
-
-(defun fetch-current-org-clock ()
-  (ignore-errors (read-file-into-string +org-clock-file-name+)))
 
 
 ;;; Window groups
@@ -127,10 +128,7 @@
 (add-hook *mode-line-click-hook* 'my-modeline-click-hook)
 
 ;;; Fix up the keyboard
-(run-external-program "setxkbmap" '("-layout" "pl" "-option" "ctrl:nocaps")) ;XXX y u no work?
-
-;;; TODO start dropbox -- dropbox start
-;;; TODO start pulseaudio -- if(pulseaudio --check == 0) { pulseaudio -D }
+(run-external-program "setxkbmap" '("-layout" "pl" "-option" "ctrl:nocaps"))
 
 ;;; TODO steal some stuff from https://github.com/joelagnel/stumpwm-goodies
 
