@@ -110,12 +110,12 @@
   (unless (group-exists-p group-name)
     (stumpwm::run-commands (cat "gnewbg " group-name))))
 
-(setf (group-name (first (screen-groups (current-screen)))) "Terminals") ;FIXME need to sort by group # first.
+(setf (group-name (first (screen-groups (current-screen)))) "T") ;FIXME need to sort by group # first.
 
-(ensure-group "Emacs")
-(ensure-group "Browser")
-(ensure-group "SQL")
-(ensure-group "IRC")
+(ensure-group "E")
+(ensure-group "B")
+(ensure-group "S")
+(ensure-group "I")
 
 ;; bind g-e to switch to Emacs group.
 ;; bind g-b to switch to browser group.
