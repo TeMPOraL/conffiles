@@ -4,7 +4,8 @@
 
 (use-package which-key
   :ensure t
-  :defer 10
+  ;; :defer 10
+  :demand t
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.5)
@@ -90,6 +91,13 @@
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
+
+
+;; Documentation
+(use-package info-colors
+  :ensure t
+  :config
+  (add-hook 'Info-selection-hook 'info-colors-fontify-node))
 
 
 ;;; Additional utility configurations
