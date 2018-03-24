@@ -108,6 +108,7 @@
 
 (setq dired-dwim-target t)              ; When two dired windows are open, copying, etc. in one sets default target to the other one.
 (setq dired-listing-switches "-alh")    ; For human-readable sizes.
+(setq wdired-allow-to-change-permissions t) ; So that we can interactively edit permissions.
 
 
 ;; Documentation
@@ -119,6 +120,5 @@
 
 ;;; Additional utility configurations
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-
 
 (provide 'init-generic-modes)
