@@ -43,8 +43,11 @@
         org-agenda-span 14
         org-deadline-warning-days 14
         org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
-                                  (sequence "WAITING_FOR(w@/!)" "DELEGATED(e@/!)" "|" "CANCELLED(c@/!)")))
+                                  (sequence "WAITING_FOR(w@/!)" "DELEGATED(e@/!)" "|" "CANCELLED(c@/!)")
+                                  (sequence "ONGOING(O)" "|")))
         ;; TODO faces for org keywords (maybe in look&feel file, or sth?)
+        org-todo-keyword-faces '(("ONGOING" . "grey"))
+
 
         org-use-fast-todo-selection t
         org-treat-S-cursor-todo-selection-as-state-change nil
