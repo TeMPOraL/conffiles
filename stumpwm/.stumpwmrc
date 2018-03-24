@@ -114,7 +114,8 @@
 
 
 ;;; Window groups
-
+;;; FIXME this business with ensuring groups is kinda broken.
+;;; FIXME also doesn't work all too well when reloading the RC file.
 (defun group-exists-p (group-name)
   (find-if (lambda (group)
              (string= group-name
@@ -125,12 +126,12 @@
   (unless (group-exists-p group-name)
     (stumpwm::run-commands (cat "gnewbg " group-name))))
 
-(setf (group-name (first (screen-groups (current-screen)))) "T") ;FIXME need to sort by group # first.
+(setf (group-name (first (screen-groups (current-screen)))) "Terminal") ;FIXME need to sort by group # first.
 
-(ensure-group "E")
-(ensure-group "B")
-(ensure-group "S")
-(ensure-group "I")
+(ensure-group "Emacs")
+(ensure-group "Browsing")
+(ensure-group "Dev")
+(ensure-group "IRC")
 
 ;; bind g-e to switch to Emacs group.
 ;; bind g-b to switch to browser group.
@@ -159,6 +160,9 @@
 
 
 ;;; Volume control
+;;; FIXME It breaks when default audio sink is not sink 0.
+;;; TODO Introduce a way to list sinks and select active one (for volume controls).
+;;; TODO Maybe introduce a smart way to "guess" the default one.
 
 (defun current-volume-settings ()
   "Return current volume settings as multiple values (`MUTEDP', `VOLUME-LEFT-%', `VOLUME-RIGHT-%')."
