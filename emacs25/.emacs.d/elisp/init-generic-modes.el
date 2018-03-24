@@ -93,6 +93,23 @@
     (setq undo-tree-visualizer-diff t)))
 
 
+;;; Dired
+
+(use-package dired-rainbow
+  :ensure t
+  :disabled t
+  )
+
+(use-package diredfl
+  :ensure t
+  :config
+  (setq diredfl-ignore-compressed-flag nil)
+  (diredfl-global-mode))
+
+(setq dired-dwim-target t)              ; When two dired windows are open, copying, etc. in one sets default target to the other one.
+(setq dired-listing-switches "-alh")    ; For human-readable sizes.
+
+
 ;; Documentation
 (use-package info-colors
   :ensure t
@@ -102,5 +119,6 @@
 
 ;;; Additional utility configurations
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+
 
 (provide 'init-generic-modes)
