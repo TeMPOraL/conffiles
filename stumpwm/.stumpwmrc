@@ -39,6 +39,7 @@
 
 ;;; Mode line configuration
 (defparameter *org-clock-current-task* "[N/A]")
+(defparameter *dropbox-current-status* "[Dropbox current status here]")
 
 (defun current-hostname ()
   (run-external-program "hostname" '()))
@@ -53,11 +54,13 @@
 ;;; mode line
 (setf *mode-line-timeout* 1)
 
+(setf *group-format* "%s%n")            ;Just status and number - to save space.
+
 (setf *screen-mode-line-format*
       (list "%g|%v | ^1"
             '(:eval *org-clock-current-task*)
             "^>"
-            '(:eval (current-dropbox))
+            '(:eval *dropbox-current-status*)
             " ^2"
             (current-hostname)
             "^n | "
@@ -71,6 +74,18 @@
 ;; Turn on the modeline
 (if (not (head-mode-line (current-head)))
     (toggle-mode-line (current-screen) (current-head)))
+
+
+;;; Dropbox monitoring.
+;;; Offloaded from modeline for performance.
+(defvar *dropbox-monitoring-timer* nil)
+(defparameter +dropbox-monitoring-interval-seconds+ 2)
+
+(unless *dropbox-monitoring-timer*
+  (setf *dropbox-monitoring-timer* (run-with-timer +dropbox-monitoring-interval-seconds+
+                                                   +dropbox-monitoring-interval-seconds+
+                                                   (lambda ()
+                                                     (setf *dropbox-current-status* (current-dropbox))))))
 
 
 ;;; Org clock fetching
