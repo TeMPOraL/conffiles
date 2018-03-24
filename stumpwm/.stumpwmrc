@@ -228,6 +228,44 @@
 (run-shell-command "pulseaudio -D")     ; PulseAudio
 
 
+;;; Better group & window navigation.
+;;; Super + 0-9 -> change frame.
+;;; Super + Ctrl + 0-9 - change group.
+;;; Super + Shift + 0-9 - pull window.
+;;; FIXME Super + Ctrl + 4 doesn't work for some magic reason. Doesn't seem to be registered
+;;;       at all by StumpWM.
+
+(setf *window-number-map* "1234567890")
+(setf *frame-number-map* "1234567890abcdefghijklmnopqrstuvxwyz")
+
+(defun downshift-number-key (number)
+  "For a number `NUMBER', return a character that would be typed when that
+number is pressed with Shift key held, on a typical US keyboard (matching my
+Polish layout)."
+  (ecase number
+    (1 #\!)
+    (2 #\@)
+    (3 #\#)
+    (4 #\$)
+    (5 #\%)
+    (6 #\^)
+    (7 #\&)
+    (8 #\*)
+    (9 #\()
+    (0 #\))))
+
+(loop for key upto 9 do
+     (define-key stumpwm:*top-map*
+         (stumpwm:kbd (format nil "s-~D" key))
+       (format nil "fselect ~D" key))
+     (define-key stumpwm:*top-map*
+         (stumpwm:kbd (format nil "C-s-~D" key))
+       (format nil "gselect ~D" key))
+     (define-key stumpwm:*top-map*
+         (stumpwm:kbd (format nil "s-~A" (downshift-number-key key)))
+       (format nil "pull-window-by-number ~D" key)))
+
+
 
 ;; (setf *colors* (list "#3c4c55"      ; 0 black
 ;;                      "#d18ec2"      ; 1 red
