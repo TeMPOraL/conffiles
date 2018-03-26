@@ -53,6 +53,9 @@
         org-treat-S-cursor-todo-selection-as-state-change nil
         org-agenda-restore-windows-after-quit t
 
+        org-startup-folded nil
+        org-agenda-inhibit-startup t
+
         org-src-fontify-natively t
         org-src-tabs-act-natively t
 
