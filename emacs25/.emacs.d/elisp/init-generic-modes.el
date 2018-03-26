@@ -63,23 +63,7 @@
   :bind ("<f12>" . whitespace-mode)
   :diminish whitespace-mode)
 
-(use-package nlinum
-  :ensure t
-  :config
-  (defun trc/nlinum-mode-hook ()
-    (when nlinum-mode
-      (setq-local nlinum-format
-                  (concat "%" (number-to-string (ceiling (log (max 1 (/ (buffer-size) 80)) 10)))
-                          "d"))))
-  (add-hook 'nlinum-mode-hook #'trc/nlinum-mode-hook)
-  (global-nlinum-mode 1))
-
-(use-package nlinum-hl
-  :ensure t
-  :config
-  (add-hook 'focus-in-hook #'nlinum-hl-flush-all-windows)
-  (add-hook 'focus-out-hook #'nlinum-hl-flush-all-windows))
-
+;;; Renders buffer content as HTML, formatting & all.
 (use-package htmlize
   :ensure t)
 
@@ -91,6 +75,9 @@
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
+
+;;; Winner mode configuration
+(winner-mode 1)
 
 
 ;;; Dired
@@ -109,6 +96,9 @@
 (setq dired-dwim-target t)              ; When two dired windows are open, copying, etc. in one sets default target to the other one.
 (setq dired-listing-switches "-alh")    ; For human-readable sizes.
 (setq wdired-allow-to-change-permissions t) ; So that we can interactively edit permissions.
+
+(global-set-key (kbd "C-x C-d") 'dired-jump-other-window)
+;; (global-set-key (kbd "C-x 4 C-d") 'dired-jump-other-window)
 
 
 ;; Documentation

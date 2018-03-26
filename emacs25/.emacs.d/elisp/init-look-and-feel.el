@@ -39,10 +39,26 @@
   :config
   (window-numbering-mode))
 
+;;; Line numbers
+(use-package nlinum
+  :ensure t
+  :config
+  ;; A hack to ensure the width of the line numbers column stays the same, instead of changing
+  ;; while scrolling each time a visible line number passes an order-of-magnitude boundary.
+  (defun trc/nlinum-mode-hook ()
+    (when nlinum-mode
+      (setq-local nlinum-format
+                  (concat "%" (number-to-string (ceiling (log (max 1 (/ (buffer-size) 80)) 10)))
+                          "d"))))
+  (add-hook 'nlinum-mode-hook #'trc/nlinum-mode-hook)
+  (global-nlinum-mode 1))
 
-;;; XXX is winner mode not available anymore?
-;; (use-package winner
-;;   :ensure t)
+;;; Some lightweight prevention of disappearing nlinum line numbers.
+(use-package nlinum-hl
+  :ensure t
+  :config
+  (add-hook 'focus-in-hook #'nlinum-hl-flush-all-windows)
+  (add-hook 'focus-out-hook #'nlinum-hl-flush-all-windows))
 
 ;; Still not sure whether I want Nyan Mode or not.
 ;; (use-package nyan-mode
