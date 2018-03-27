@@ -94,7 +94,7 @@
   (diredfl-global-mode))
 
 (setq dired-dwim-target t)              ; When two dired windows are open, copying, etc. in one sets default target to the other one.
-(setq dired-listing-switches "-alh")    ; For human-readable sizes.
+(setq dired-listing-switches "-alh --time-style=long-iso")    ; For human-readable sizes and sensible dates.
 (setq wdired-allow-to-change-permissions t) ; So that we can interactively edit permissions.
 
 (global-set-key (kbd "C-x C-d") 'dired-jump-other-window)

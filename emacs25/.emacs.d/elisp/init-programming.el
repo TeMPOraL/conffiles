@@ -19,6 +19,16 @@
   :config
   (pretty-lambda-for-modes))
 
+
+;;; Various configuration files
+(use-package ssh-config-mode
+  :ensure t
+  :mode (("/\\.ssh/config\\'" . ssh-config-mode)
+         ("/sshd?_config\\'" . ssh-config-mode)
+         ("/known_hosts\\'" . ssh-known-hosts-mode)
+         ("/authorized_keys2?\\'" . ssh-authorized-keys-mode))) 
+
+
 ;;; Git support
 (use-package git-gutter-fringe
   :ensure t
