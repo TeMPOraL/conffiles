@@ -25,7 +25,7 @@
 (setq backup-directory-alist `(("." . ,(expand-file-name (trc/emacs-subdirectory "backups")))))
 (setq tramp-backup-directory-alist backup-directory-alist)
 
-;; TODO auto-save-files config?
+(add-to-list 'auto-save-file-name-transforms `(".*" ,(expand-file-name (trc/emacs-subdirectory "autosave")) t))
 
 
 ;;; Personalization
