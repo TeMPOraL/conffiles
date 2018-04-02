@@ -228,6 +228,8 @@
   (add-hook 'org-clock-in-hook 'my/save-clock-if-any)
   (add-hook 'org-clock-out-hook 'my/save-clock-if-any)
   (add-hook 'org-clock-cancel-hook 'my/save-clock-if-any)
+
+  (require 'clocktable-by-tag)
   )
 
 ;;; XXX not sure if this is the best way; maybe set up in org mode through org-modules instead?
