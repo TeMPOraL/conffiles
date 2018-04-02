@@ -64,6 +64,7 @@
 ;;; Programming
 (require 'init-shell)
 (require 'init-programming)
+(require 'init-latex)
 (require 'init-markup-modes)
 (require 'init-webdev)
 (require 'init-lisp)
