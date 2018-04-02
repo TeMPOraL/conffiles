@@ -26,7 +26,11 @@
   :mode (("/\\.ssh/config\\'" . ssh-config-mode)
          ("/sshd?_config\\'" . ssh-config-mode)
          ("/known_hosts\\'" . ssh-known-hosts-mode)
-         ("/authorized_keys2?\\'" . ssh-authorized-keys-mode))) 
+         ("/authorized_keys2?\\'" . ssh-authorized-keys-mode)))
+
+(use-package fish-mode
+  :ensure t)
+
 
 
 ;;; Git support
