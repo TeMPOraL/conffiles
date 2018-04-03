@@ -2,8 +2,9 @@
 (global-font-lock-mode 1)
 (setq font-lock-maximum-decoration t)
 
-(column-number-mode t)
-(line-number-mode t)
+(column-number-mode -1)
+(line-number-mode -1)
+(setq mode-line-position "")            ;Get rid of the top/bot/% stuff
 
 (show-paren-mode t)
 
@@ -19,6 +20,39 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+
+;;; Mark
+(use-package visible-mark
+  :ensure t
+  :config
+  (setq visible-mark-max 1)
+  (transient-mark-mode -1)
+  (global-visible-mark-mode 1)
+
+  ;; Stolen from https://www.masteringemacs.org/article/fixing-mark-commands-transient-mark-mode.
+  ;; For use if I ever want to come back to `transient-mark-mode'.
+  (defun push-mark-no-activate ()
+    "Pushes `point' to `mark-ring' and does not activate the region
+   Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
+    (interactive)
+    (push-mark (point) t nil)
+    (message "Pushed mark to ring"))
+
+  (defun jump-to-mark ()
+    "Jumps to the local mark, respecting the `mark-ring' order.
+  This is the same as using \\[set-mark-command] with the prefix argument."
+    (interactive)
+    (set-mark-command 1))
+
+  (defun exchange-point-and-mark-no-activate ()
+    "Identical to \\[exchange-point-and-mark] but will not activate the region."
+    (interactive)
+    (exchange-point-and-mark)
+    (deactivate-mark nil))
+
+  (global-set-key (kbd "C-`") 'push-mark-no-activate)
+  (global-set-key (kbd "M-`") 'jump-to-mark)
+  (define-key global-map [remap exchange-point-and-mark] 'exchange-point-and-mark-no-activate))
 
 ;;; ^L handling
 (use-package form-feed

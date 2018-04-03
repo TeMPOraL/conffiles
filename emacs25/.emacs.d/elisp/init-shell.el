@@ -5,6 +5,10 @@
 ;;; - http://www.howardism.org/Technical/Emacs/eshell-fun.html
 
 
+
+(setq async-shell-command-buffer 'new-buffer)
+
+
 ;;; Prompt
 (setq eshell-prompt-function
       (macrolet ((with-face (str &rest props)
@@ -70,5 +74,16 @@ directory to make multiple eshell windows easier."
   (insert "exit")
   (eshell-send-input)
   (delete-window))
+
+
+;;; Run a shell command forever in a buffer.
+;;; Stolen from CCE - http://doc.rix.si/cce/cce.html.
+;;; Modified for interactive use.
+;;; Modified to use Fish shell.
+(defun my/async-forever (command buffer-name)
+  "Run a command in an async buffer forever"
+  (interactive "sCommand: \nBBuffer: ")
+  (async-shell-command (concat "while true; " command "; sleep 5; end")
+                       (get-buffer-create buffer-name)))
 
 (provide 'init-shell)

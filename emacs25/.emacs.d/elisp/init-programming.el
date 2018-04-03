@@ -32,6 +32,18 @@
   :ensure t)
 
 
+;;; Cypher and Neo4j
+(use-package cypher-mode
+  :ensure t)
+
+;;; TODO maybe use my half-baked cypher-shell mode?
+
+(use-package n4js
+  :ensure t
+  ;; TODO extra configuration
+  )
+
+
 
 ;;; Git support
 (use-package git-gutter-fringe

@@ -2,6 +2,9 @@
 (use-package diminish
   :ensure t)
 
+(use-package hydra
+  :ensure t)
+
 (use-package which-key
   :ensure t
   ;; :defer 10
@@ -65,7 +68,11 @@
 
 ;;; Renders buffer content as HTML, formatting & all.
 (use-package htmlize
-  :ensure t)
+  :ensure t
+  :config
+  (setq htmlize-html-charset "utf-8")
+  ;; TODO figure out a way to make it not (totally) broken on terminal.
+  )
 
 (use-package undo-tree
   :ensure t
@@ -110,5 +117,29 @@
 
 ;;; Additional utility configurations
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+
+;;; Persistent scratch
+;;; Stolen from CCE - http://doc.rix.si/cce/cce.html
+(defun save-persistent-scratch ()
+  "Write the contents of *scratch* to the file name
+`persistent-scratch-file-name'."
+  (with-current-buffer (get-buffer-create "*scratch*")
+    (write-region (point-min) (point-max) "~/.emacs.d/persistent-scratch")))
+
+(defun load-persistent-scratch ()
+  "Load the contents of `persistent-scratch-file-name' into the
+  scratch buffer, clearing its contents first."
+  (if (file-exists-p "~/.emacs-persistent-scratch")
+      (with-current-buffer (get-buffer "*scratch*")
+        (delete-region (point-min) (point-max))
+        (insert-file-contents "~/.emacs.d/persistent-scratch"))))
+
+(add-hook 'after-init-hook 'load-persistent-scratch)
+(add-hook 'kill-emacs-hook 'save-persistent-scratch)
+
+(if (not (boundp 'my/save-persistent-scratch-timer))
+    (setq my/save-persistent-scratch-timer
+          (run-with-idle-timer 300 t 'save-persistent-scratch)))
 
 (provide 'init-generic-modes)
