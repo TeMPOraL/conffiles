@@ -266,6 +266,44 @@ Polish layout)."
        (format nil "pull-window-by-number ~D" key)))
 
 
+;;; Tweaks for better dual-monitor setup
+(setf *window-border-style* :none)
+
+(define-key *top-map* (kbd "s-f") "fselect") ; for faster access to select frame by number
+
+;;; This is like fnext, but restricted to current head only.
+(defun focus-next-frame-on-current-head (group)
+  "Focus next frame, limited to current head."
+  (let ((current-head (group-current-head group)))
+    (focus-frame-after group
+                       (remove-if-not (lambda (frame)
+                                        (eql (frame-head group frame)
+                                             current-head))
+                                      (group-frames group)))))
+
+(defcommand (fnext-head tile-group) () ()
+  "Like `fnext', but only within current head."
+  (focus-next-frame-on-current-head (current-group)))
+
+(defun focus-current-frame-on-other-head (group)
+  "Focus first frame on the next head."
+  (let* ((remaining-heads (cdr (member (group-current-head group) (screen-heads (current-screen)))))
+         (other-head (if (null remaining-heads)
+                         (first (screen-heads (current-screen)))
+                         (car remaining-heads))))
+    (focus-frame group (first (remove-if-not (lambda (frame)
+                                               (eql (frame-head group frame)
+                                                    other-head))
+                                             (group-frames group))))))
+
+(defcommand (hnext tile-group) () ()
+  "Switch to next head, focusing on first frame there."
+  (focus-current-frame-on-other-head (current-group)))
+
+(define-key *top-map* (kbd "s-o") "fnext-head")
+(define-key *top-map* (kbd "s-p") "hnext")
+
+
 
 ;; (setf *colors* (list "#3c4c55"      ; 0 black
 ;;                      "#d18ec2"      ; 1 red
