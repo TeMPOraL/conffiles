@@ -36,6 +36,12 @@
     (external-program:run cmd args :output s)
     (string-trim '(#\Newline #\Space) (get-output-stream-string s))))
 
+(defun first-line-only (str)
+  (let ((pos (position #\Newline str)))
+    (if pos
+        (subseq str 0 pos)
+        str)))
+
 
 ;;; Mode line configuration
 (defparameter *org-clock-current-task* "[N/A]")
@@ -49,7 +55,7 @@
 
 (defun current-dropbox ()
   ;; TODO colors
-  (run-external-program "dropbox" '("status")))
+  (first-line-only (run-external-program "dropbox" '("status"))))
 
 ;;; mode line
 (setf *mode-line-timeout* 1)
@@ -302,6 +308,15 @@ Polish layout)."
 
 (define-key *top-map* (kbd "s-o") "fnext-head")
 (define-key *top-map* (kbd "s-p") "hnext")
+
+(define-key *top-map* (kbd "s-m") "gmove")
+
+(dolist (key '("Left" "Right" "Up" "Down"))
+  (define-key *top-map* (kbd (cat "s-" key)) (cat "move-window " key))
+  (define-key *top-map* (kbd (cat "S-s-" key)) (cat "exchange-direction " key)))
+
+
+;;; TODO C-s-h -- list all bindings for *top-map*.
 
 
 
